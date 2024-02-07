@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+  :root {
+    --color-primary-400: #de0d6f;
+    --color-primary-500: #731054;
+
+    --color-gray-200: #e5e5e5;
+    --color-gray-300: #b2b2b2;
+    --color-gray-400: #666666;
+    --color-gray-500: #000000;
+
+    --color-success-500: #3bc171;
+  }
+  
+  body {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    font-family: "Montserrat";
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Poppins";
+  }
+
+  .h3,
+  h3 {
+    font-size: 20px;
+    line-height: 24px;
+    font-weight: 700;
+  }
+
+  .h4,
+  h4 {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  @screen md {
+    .h3,
+    h3 {
+      font-size: 24px;
+      line-height: 32px;
+    }
+
+    .h4,
+    h4 {
+      font-size: 20px;
+    }
+  }
+}
+
+.bg-gradient {
+  background: linear-gradient(
+            295.67deg,
+            #de0d6f 16.23%,
+            #731054 83.77%
+          );
+}
+
