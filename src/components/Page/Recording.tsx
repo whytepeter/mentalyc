@@ -22,7 +22,7 @@ export default function RecordingPage() {
     router.replace("/dashboard");
   };
 
-  const closeConfirm = () => {
+  const closeConfirmModal = () => {
     setShowConfirm(false);
   };
 
@@ -71,7 +71,7 @@ export default function RecordingPage() {
         showDismissButton={false}
         size="small"
         open={showConfirm}
-        onClose={closeConfirm}
+        onClose={closeConfirmModal}
       >
         <div className="mb-6 text-center">
           <h3 className="font-bold text-xl mb-1">Are you sure?</h3>
@@ -81,13 +81,13 @@ export default function RecordingPage() {
         <div className="flex items-center justify-center gap-2">
           <Button
             onClick={() => {
-              closeConfirm();
+              closeConfirmModal();
               router.replace("/dashboard");
             }}
           >
             Yes
           </Button>
-          <Button color="default" onClick={closeConfirm}>
+          <Button color="default" onClick={closeConfirmModal}>
             Uhm, No
           </Button>
         </div>

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { BaseModal } from "@/components/BaseModal";
 import { Button } from "@/components/Button";
-import Loader from "@/icons/Loader";
+import Loader from "@/components/Loader";
 import RecordingPanel from "@/components/Recordings/RecordingPanel";
 import { toast } from "react-hot-toast";
+import http from "@/utils/api";
 
 type RecordingSessionType = {
   sessionName: string;
@@ -110,12 +111,9 @@ export default function RecordingSession({
       formData.append("audio", recordedBlob, "recording.wav");
       formData.append("sessionName", sessionName);
 
-      const response = await fetch("YOUR_UPLOAD_URL", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await http("POST", formData);
 
-      if (!response.ok) {
+      if (!response) {
         toast.error("Failed to upload recording");
         return;
       }
@@ -187,9 +185,7 @@ export default function RecordingSession({
         </div>
 
         <div className="flex items-center justify-center gap-2">
-          <div className="animate-spin">
-            <Loader />
-          </div>
+          <Loader />
         </div>
       </BaseModal>
     </>

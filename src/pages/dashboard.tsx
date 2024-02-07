@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import Head from "next/head";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import DashboardPage from "@/components/Page/Dashboard";
 import RecordingPage from "@/components/Page/Recording";
-import { useRouter } from "next/router";
 
 export default function Dashboard() {
   const router = useRouter();
