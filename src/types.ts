@@ -1,4 +1,5 @@
 export type Recording = {
+  id: string;
   name: string;
   timestamp: string;
   length: string;

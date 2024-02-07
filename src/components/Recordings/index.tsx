@@ -11,12 +11,14 @@ const socket = io(url!);
 
 const data: Recordings = [
   {
+    id: "1",
     name: "Session #1",
     timestamp: String(new Date()),
     length: "10 min",
     status: "DONE",
   },
   {
+    id: "2",
     name: "Session #1",
     timestamp: String(new Date()),
     length: "10 min",

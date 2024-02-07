@@ -16,9 +16,9 @@ export function Table({ recordings }: TableProps) {
         </div>
       </header>
       <div>
-        {recordings.map((recording, index) => (
+        {recordings.map((recording) => (
           <div
-            key={`table-${index}`}
+            key={`table-${recording.id}`}
             className="grid text-sm grid-cols-4 gap-4 bg-slate-50 border-b border-primary p-4"
           >
             <div className="">{recording.name}</div>
