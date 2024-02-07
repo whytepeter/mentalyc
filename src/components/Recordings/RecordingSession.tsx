@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { BaseModal } from "@/components/BaseModal";
 import { Button } from "@/components/Button";
+import Loader from "@/icons/Loader";
 import RecordingPanel from "@/components/Recordings/RecordingPanel";
 import { toast } from "react-hot-toast";
 
@@ -23,7 +24,6 @@ export default function RecordingSession({
   const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
   const [recordingDuration, setRecordingDuration] = useState(0);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
-  const [recordingStatus, setRecordingStatus] = useState<string>("Idle");
   const audioElementRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -76,21 +76,18 @@ export default function RecordingSession({
         if (audioElementRef.current) {
           audioElementRef.current.src = audioURL;
         }
-        setRecordingStatus("Recording Stopped");
       };
 
       recorder.onerror = () => {
-        setRecordingStatus("Recording Error");
         setIsRecording(false);
       };
 
       recorder.start();
       setIsRecording(true);
-      setRecordingStatus("Recording Started");
+
       setMediaRecorder(recorder);
     } catch (error) {
       console.error("Error starting recording:", error);
-      setRecordingStatus("Recording Error");
     }
   };
 
@@ -178,7 +175,7 @@ export default function RecordingSession({
           setIsUploading(false);
         }}
       >
-        <div className="mb-6 text-center">
+        <div className="mb-4 text-center">
           <h3
             onClick={() => {
               setIsUploading(false);
@@ -190,7 +187,9 @@ export default function RecordingSession({
         </div>
 
         <div className="flex items-center justify-center gap-2">
-          Uploading...
+          <div className="animate-spin">
+            <Loader />
+          </div>
         </div>
       </BaseModal>
     </>

@@ -4,8 +4,7 @@ import { Button } from "@/components/Button";
 import { BaseModal } from "@/components/BaseModal";
 import { TextField } from "@/components/TextField";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { Recording } from "@/types";
+import { useState } from "react";
 import { toast } from "react-hot-toast";
 
 export default function RecordingPage() {

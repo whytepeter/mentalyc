@@ -1,4 +1,3 @@
-import React, { useState, useEffect, useRef } from "react";
 import Play from "@/icons/Play";
 
 type RecordingPanelType = {
