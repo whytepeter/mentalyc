@@ -18,7 +18,6 @@ export default function RecordingSession({
 }: RecordingSessionType) {
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const [time, setTime] = useState<number>(0);
-  const [isPaused, setIsPaused] = useState<boolean>(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(
     null
   );
@@ -28,7 +27,7 @@ export default function RecordingSession({
   const { uploadRecording, isUploading } = useUpload();
 
   useEffect(() => {
-    if (isRecording && !isPaused) {
+    if (isRecording) {
       startRecording();
 
       // Start timer to track recording duration
@@ -40,7 +39,7 @@ export default function RecordingSession({
         clearInterval(id);
       };
     }
-  }, [isRecording, isPaused]);
+  }, [isRecording]);
 
   const clearDurationInterval = (): void => {
     if (intervalId) {
@@ -84,24 +83,11 @@ export default function RecordingSession({
     }
   };
 
-  const togglePauseRecording = (): void => {
-    if (mediaRecorder) {
-      if (isPaused) {
-        // Resume recording
-        mediaRecorder.resume();
-        setIsPaused(false);
-      } else {
-        // Pause recording
-        mediaRecorder.pause();
-        setIsPaused(true);
-      }
-    }
-  };
-
   const stopRecording = (): void => {
     if (mediaRecorder) {
       mediaRecorder.stop();
       setIsRecording(false);
+      setTime(0);
     }
 
     clearDurationInterval();
@@ -120,12 +106,7 @@ export default function RecordingSession({
         </p>
 
         {isRecording ? (
-          <RecordingPanel
-            isPaused={isPaused}
-            pauseRecording={togglePauseRecording}
-            time={time}
-            stopRecording={stopRecording}
-          />
+          <RecordingPanel time={time} stopRecording={stopRecording} />
         ) : (
           <>
             <audio ref={audioElementRef} controls></audio>

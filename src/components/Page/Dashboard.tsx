@@ -1,5 +1,5 @@
 import { Button } from "@/components/Button";
-import { RecordingList } from "@/components/Recordings";
+import { RecordingList } from "@/components/Recordings/RecordingList";
 import { useRouter } from "next/router";
 
 export default function DashboardPage() {
