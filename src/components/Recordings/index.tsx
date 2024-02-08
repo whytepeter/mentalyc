@@ -1,27 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Recordings, ResponseType } from "@/types";
+import { Recordings, Recording, ResponseType } from "@/types";
 import { Table } from "./Table";
 import { toast } from "react-hot-toast";
 import Loader from "@/components/Loader";
 import http from "@/utils/api";
 import useSocket from "@/hooks/useSocket";
-
-const data: Recordings = [
-  {
-    id: "1",
-    name: "Session #1",
-    timestamp: String(new Date()),
-    length: "10 min",
-    status: "DONE",
-  },
-  {
-    id: "2",
-    name: "Session #1",
-    timestamp: String(new Date()),
-    length: "10 min",
-    status: "PROCESSING",
-  },
-];
 
 export function RecordingList() {
   const socket = useSocket();
@@ -34,7 +17,7 @@ export function RecordingList() {
       try {
         const response = await http<ResponseType>("GET");
         if (!response.success) return;
-        setRecordings(response?.data);
+        setRecordings(response.data);
       } catch (error: any) {
         toast.error(error.message || "An error occurred.");
       } finally {
@@ -50,24 +33,22 @@ export function RecordingList() {
   }, [socket]);
 
   const handleStatusUpdate = (updatedRecording: Recordings[number]) => {
-    console.log("CODE UPDATED");
-    console.log(updatedRecording);
-    setRecordings((prevRecordings) =>
-      prevRecordings
-        ? prevRecordings.map((prevRecording) =>
-            prevRecording.id === updatedRecording.id
-              ? updatedRecording
-              : prevRecording
-          )
-        : null
-    );
+    setRecordings((prevRecordings) => {
+      const updatedRecordings = prevRecordings?.map((record) =>
+        record.id === updatedRecording.id ? updatedRecording : record
+      );
+      return updatedRecordings;
+    });
     toast.success(`${updatedRecording?.name}, done proccessing`);
   };
 
   return (
     <>
-      <div className="flex flex-col gap-5">
-        <h3 className="font-medium">My Recordings</h3>
+      <div className="flex flex-col gap-5 pb-8">
+        <h3 className="font-medium">
+          Recordings -
+          <span className="text-primary-100">{recordings?.length || 0}</span>{" "}
+        </h3>
 
         {recordings && recordings.length ? (
           <Table recordings={recordings} />

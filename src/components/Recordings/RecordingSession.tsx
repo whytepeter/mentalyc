@@ -1,13 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useUpload } from "@/hooks/useUpload";
 import { BaseModal } from "@/components/BaseModal";
-import { ResponseType } from "@/types";
 import { Button } from "@/components/Button";
-import { calculateLength } from "@/utils";
 import Loader from "@/components/Loader";
 import RecordingPanel from "@/components/Recordings/RecordingPanel";
-import { toast } from "react-hot-toast";
-import http from "@/utils/api";
-import { useRouter } from "next/router";
 
 type RecordingSessionType = {
   sessionName: string;
@@ -20,8 +16,6 @@ export default function RecordingSession({
   isRecording,
   setIsRecording,
 }: RecordingSessionType) {
-  const router = useRouter();
-  const [isUploading, setIsUploading] = useState<boolean>(false);
   const [maxDuration, setMaxDuration] = useState<number>(60);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const [recordingDuration, setRecordingDuration] = useState(0);
@@ -31,6 +25,8 @@ export default function RecordingSession({
   );
   const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
   const audioElementRef = useRef<HTMLAudioElement | null>(null);
+
+  const { uploadRecording, isUploading } = useUpload();
 
   useEffect(() => {
     if (isRecording) {
@@ -107,51 +103,15 @@ export default function RecordingSession({
     clearDurationInterval();
   };
 
-  const uploadRecording = async () => {
+  const handleUpload = (): void => {
     if (!recordedBlob) return;
-
-    try {
-      setIsUploading(true);
-
-      const length = (await calculateLength(recordedBlob)) || "N/A";
-      const timestamp = new Date().toLocaleString();
-
-      const formData = new FormData();
-      formData.append("audio", recordedBlob);
-      formData.append("name", sessionName);
-      formData.append("length", length);
-      formData.append("timestamp", timestamp);
-
-      const headers = {
-        "Content-Type": "multipart/form-data",
-      };
-      const res = await http<ResponseType>("POST", formData, headers);
-
-      if (!res.success) {
-        toast.error("Failed to upload recording");
-        return;
-      }
-
-      toast.success(res?.message);
-
-      router.replace("/dashboard");
-    } catch (error: any) {
-      console.error("Error uploading recording:", error);
-      toast.error(error?.message);
-    } finally {
-      setIsUploading(false);
-    }
+    uploadRecording(recordedBlob, sessionName);
   };
 
   return (
     <>
       <div className="flex flex-col items-center gap-8 w-full sm:max-w-2xl">
-        <p
-          onClick={() => {
-            setIsUploading(true);
-          }}
-          className="text-[20px] "
-        >
+        <p className="text-[20px] ">
           Name: <span className="text-gray-400">{sessionName}</span>{" "}
         </p>
 
@@ -173,7 +133,7 @@ export default function RecordingSession({
               >
                 Record Again
               </Button>
-              <Button onClick={uploadRecording} className="w-full">
+              <Button onClick={handleUpload} className="w-full">
                 Upload Recording
               </Button>
             </div>
@@ -185,19 +145,10 @@ export default function RecordingSession({
         showDismissButton={false}
         size="small"
         open={isUploading}
-        onClose={() => {
-          setIsUploading(false);
-        }}
+        onClose={() => {}}
       >
         <div className="mb-4 text-center">
-          <h3
-            onClick={() => {
-              setIsUploading(false);
-            }}
-            className="font-bold text-xl mb-1"
-          >
-            Uploading recording
-          </h3>
+          <h3 className="font-bold text-xl mb-1">Uploading recording</h3>
         </div>
 
         <div className="flex items-center justify-center gap-2">
