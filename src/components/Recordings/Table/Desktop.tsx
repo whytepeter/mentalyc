@@ -26,7 +26,7 @@ export default function Desktop({ recordings }: TableProps) {
           {recordings.map((recording) => (
             <div
               key={`table-${recording.id}`}
-              className="grid text-sm  grid-cols-5 gap-4 bg-slate-50 border-b border-primary p-4"
+              className="grid text-sm  items-center grid-cols-5 gap-4 bg-slate-50 border-b border-primary p-4"
             >
               <div className="">{recording.name}</div>
               <div className="line-clamp-1">{recording.timestamp}</div>
