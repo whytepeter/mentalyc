@@ -4,11 +4,7 @@ import { Table } from "./Table";
 import { toast } from "react-hot-toast";
 import Loader from "@/components/Loader";
 import http from "@/utils/api";
-
-import io from "socket.io-client";
-
-const socketUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-const socket = io(socketUrl);
+import useSocket from "@/hooks/useSocket";
 
 const data: Recordings = [
   {
@@ -28,6 +24,7 @@ const data: Recordings = [
 ];
 
 export function RecordingList() {
+  const socket = useSocket();
   const [recordings, setRecordings] = useState<Recordings | null>();
   const [loading, setLoading] = useState(false);
 
@@ -48,15 +45,13 @@ export function RecordingList() {
     fetchRecordings();
 
     // Listen for 'statusUpdate' event from the server
+    if (!socket) return;
     socket.on("onStatusUpdate", handleStatusUpdate);
-
-    // Clean up socket connection
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+  }, [socket]);
 
   const handleStatusUpdate = (updatedRecording: Recordings[number]) => {
+    console.log("CODE UPDATED");
+    console.log(updatedRecording);
     setRecordings((prevRecordings) =>
       prevRecordings
         ? prevRecordings.map((prevRecording) =>

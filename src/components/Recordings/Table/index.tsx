@@ -15,7 +15,7 @@ export function Table({ recordings }: TableProps) {
           <div className="font-medium">Status</div>
         </div>
       </header>
-      <div>
+      <div className="max-h-[500px] overflow-auto ">
         {recordings.map((recording) => (
           <div
             key={`table-${recording.id}`}
