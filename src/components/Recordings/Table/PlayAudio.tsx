@@ -38,12 +38,10 @@ export default function PlayAudio({ recording }: AudioPlayerProps) {
 
       <BaseModal size="small" open={isPlaying} onClose={stopPlaying}>
         <div className="mb-4 text-center">
-          <h3 className="font-bold text-xl mb-1">Uploading recording</h3>
+          <h3 className="font-bold text-xl mb-1">{recording?.name}</h3>
         </div>
 
-        <div className="flex items-center justify-center gap-2">
-          {recording?.name} playing..
-        </div>
+        <div className="flex items-center justify-center gap-2">Playing..</div>
       </BaseModal>
     </>
   );
