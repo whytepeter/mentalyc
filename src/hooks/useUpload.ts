@@ -9,13 +9,17 @@ export const useUpload = () => {
   const router = useRouter();
   const [isUploading, setIsUploading] = useState(false);
 
-  const uploadRecording = async (recordedBlob: Blob, sessionName: string) => {
+  const uploadRecording = async (
+    recordedBlob: Blob,
+    sessionName: string,
+    time: number
+  ) => {
     if (!recordedBlob) return;
 
     try {
       setIsUploading(true);
 
-      const length = (await calculateLength(recordedBlob)) || "N/A";
+      const length = calculateLength(time) || "N/A";
       const timestamp = new Date().toLocaleString();
 
       const formData = new FormData();

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = `${process.env.NEXT_PUBLIC_API_URL}/recordings`;
+axios.defaults.baseURL = `${process.env.NEXT_PUBLIC_API_URL}/api/recordings`;
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 const http = async <T>(

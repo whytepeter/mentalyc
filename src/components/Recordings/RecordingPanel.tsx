@@ -1,44 +1,48 @@
-import Play from "@/icons/Play";
+import Microphone from "@/icons/Microphone";
+import { Button } from "@/components/Button";
+import { formatTime } from "@/utils";
 
 type RecordingPanelType = {
-  duration: number;
-  maxDuration: number;
+  isPaused: boolean;
+  time: number;
+  pauseRecording: () => void;
   stopRecording: () => void;
 };
 
 export default function RecordingPanel({
-  duration,
-  maxDuration,
+  isPaused,
+  time,
+  pauseRecording,
   stopRecording,
 }: RecordingPanelType) {
   return (
-    <>
-      <div className="flex w-full  items-center gap-4">
-        <div className="cursor-pointer bg-gradient w-12 h-12 flex items-center justify-center rounded-full">
-          <Play />
-        </div>
-        <div className="relative overflow-hidden flex-1 w-full  p-4 bg-slate-100 ">
-          <div
-            style={{
-              width: `${Math.round(duration * (100 / maxDuration))}%`,
-            }}
-            className={` h-4 z-10 bg-primary-100 absolute left-0 top-1/2 -translate-y-1/2`}
-          ></div>
-          <div className="absolute  left-0 top-1/2 -translate-y-1/2 w-full border-2 border-dashed border-primary-100"></div>
-        </div>
-        <div className=" text-primary text-xl font-medium">
-          {duration}:{maxDuration}
+    <div className="flex flex-col gap-5">
+      <div className="flex w-full   items-center justify-center gap-4">
+        <div
+          className={`${
+            !isPaused
+              ? "animate__animated animate__pulse animate__infinite "
+              : ""
+          }sm:w-28 sm:h-28 bg-gradient p-2 bg-slate-200 rounded-full`}
+        >
+          <div className="w-full h-full border border-white flex items-center justify-center rounded-full">
+            <Microphone />
+          </div>
         </div>
       </div>
 
-      <button
-        onClick={stopRecording}
-        className="p-2 rounded-full bg-gradient text-white h-20 w-20 flex items-center justify-center"
-      >
-        <div className="p-2 w-full h-full rounded-full border border-white flex items-center justify-center">
+      <div className="text-center text-[20px] text-primary">
+        {formatTime(time)}
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <Button onClick={pauseRecording} color="default" className="w-full">
+          {isPaused ? "Play" : "Pause"}
+        </Button>
+        <Button onClick={stopRecording} className="w-full">
           Stop
-        </div>
-      </button>
-    </>
+        </Button>
+      </div>
+    </div>
   );
 }

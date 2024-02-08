@@ -16,10 +16,9 @@ export default function RecordingSession({
   isRecording,
   setIsRecording,
 }: RecordingSessionType) {
-  const [maxDuration, setMaxDuration] = useState<number>(60);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
-  const [recordingDuration, setRecordingDuration] = useState(0);
-
+  const [time, setTime] = useState<number>(0);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(
     null
   );
@@ -29,26 +28,19 @@ export default function RecordingSession({
   const { uploadRecording, isUploading } = useUpload();
 
   useEffect(() => {
-    if (isRecording) {
+    if (isRecording && !isPaused) {
       startRecording();
 
       // Start timer to track recording duration
-      let duration = 0;
       const id = setInterval(() => {
-        setRecordingDuration((prev) => prev + 1);
-        duration++;
-        if (duration === maxDuration) {
-          stopRecording();
-          clearInterval(id);
-        }
+        setTime((prevTime) => prevTime + 1);
       }, 1000);
       setIntervalId(id);
-
       return () => {
         clearInterval(id);
       };
     }
-  }, [isRecording]);
+  }, [isRecording, isPaused]);
 
   const clearDurationInterval = (): void => {
     if (intervalId) {
@@ -92,12 +84,24 @@ export default function RecordingSession({
     }
   };
 
+  const togglePauseRecording = (): void => {
+    if (mediaRecorder) {
+      if (isPaused) {
+        // Resume recording
+        mediaRecorder.resume();
+        setIsPaused(false);
+      } else {
+        // Pause recording
+        mediaRecorder.pause();
+        setIsPaused(true);
+      }
+    }
+  };
+
   const stopRecording = (): void => {
     if (mediaRecorder) {
       mediaRecorder.stop();
-
       setIsRecording(false);
-      setRecordingDuration(0);
     }
 
     clearDurationInterval();
@@ -105,7 +109,7 @@ export default function RecordingSession({
 
   const handleUpload = (): void => {
     if (!recordedBlob) return;
-    uploadRecording(recordedBlob, sessionName);
+    uploadRecording(recordedBlob, sessionName, time);
   };
 
   return (
@@ -117,8 +121,9 @@ export default function RecordingSession({
 
         {isRecording ? (
           <RecordingPanel
-            duration={recordingDuration}
-            maxDuration={maxDuration}
+            isPaused={isPaused}
+            pauseRecording={togglePauseRecording}
+            time={time}
             stopRecording={stopRecording}
           />
         ) : (

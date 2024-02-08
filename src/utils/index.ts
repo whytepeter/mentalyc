@@ -2,19 +2,23 @@ export const randomRange = (start: number, end: number) => {
   return Math.floor(Math.random() * (end - start)) + start;
 };
 
-export const calculateLength = (blob: Blob): string => {
-  let length = "";
-  const audioURL = URL.createObjectURL(blob);
-  const audio = new Audio(audioURL);
+export const calculateLength = (time: number): string => {
+  const timeStr = formatTime(time).split(":");
+  const minutes = timeStr[1];
+  const seconds = timeStr[2];
 
-  audio.addEventListener("canplaythrough", function () {
-    const durationInSeconds = audio.duration;
-    const minutes = Math.floor(durationInSeconds / 60);
-    const seconds = Math.floor(durationInSeconds % 60)
-      .toString()
-      .padStart(2, "0");
-    length = `${minutes}m:${seconds}s`;
-  });
-  audio.load();
+  const length = `${minutes}m:${seconds}s`;
   return length;
+};
+
+export const formatTime = (time: number): string => {
+  const hours = Math.floor(time / 3600);
+  const minutes = Math.floor((time % 3600) / 60);
+  const seconds = time % 60;
+
+  const formattedHours = String(hours).padStart(2, "0");
+  const formattedMinutes = String(minutes).padStart(2, "0");
+  const formattedSeconds = String(seconds).padStart(2, "0");
+
+  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 };
