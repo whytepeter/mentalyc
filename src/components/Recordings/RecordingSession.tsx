@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { BaseModal } from "@/components/BaseModal";
+import { ResponseType } from "@/types";
 import { Button } from "@/components/Button";
+import { calculateLength } from "@/utils";
 import Loader from "@/components/Loader";
 import RecordingPanel from "@/components/Recordings/RecordingPanel";
 import { toast } from "react-hot-toast";
 import http from "@/utils/api";
+import { useRouter } from "next/router";
 
 type RecordingSessionType = {
   sessionName: string;
@@ -17,14 +20,16 @@ export default function RecordingSession({
   isRecording,
   setIsRecording,
 }: RecordingSessionType) {
+  const router = useRouter();
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [maxDuration, setMaxDuration] = useState<number>(60);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+  const [recordingDuration, setRecordingDuration] = useState(0);
+
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(
     null
   );
-  const [isUploading, setIsUploading] = useState<boolean>(false);
-  const [maxDuration, setMaxDuration] = useState<number>(60);
   const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
-  const [recordingDuration, setRecordingDuration] = useState(0);
-  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const audioElementRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -36,7 +41,6 @@ export default function RecordingSession({
       const id = setInterval(() => {
         setRecordingDuration((prev) => prev + 1);
         duration++;
-        console.log(duration, maxDuration);
         if (duration === maxDuration) {
           stopRecording();
           clearInterval(id);
@@ -60,9 +64,11 @@ export default function RecordingSession({
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const recorder = new MediaRecorder(stream);
-      const chunks: Blob[] = [];
 
+      const recorder = new MediaRecorder(stream);
+      setMediaRecorder(recorder);
+
+      const chunks: Blob[] = [];
       recorder.ondataavailable = (e) => {
         chunks.push(e.data);
       };
@@ -85,8 +91,6 @@ export default function RecordingSession({
 
       recorder.start();
       setIsRecording(true);
-
-      setMediaRecorder(recorder);
     } catch (error) {
       console.error("Error starting recording:", error);
     }
@@ -95,6 +99,7 @@ export default function RecordingSession({
   const stopRecording = (): void => {
     if (mediaRecorder) {
       mediaRecorder.stop();
+
       setIsRecording(false);
       setRecordingDuration(0);
     }
@@ -104,21 +109,32 @@ export default function RecordingSession({
 
   const uploadRecording = async () => {
     if (!recordedBlob) return;
+
     try {
       setIsUploading(true);
 
+      const length = (await calculateLength(recordedBlob)) || "N/A";
+      const timestamp = new Date().toLocaleString();
+
       const formData = new FormData();
-      formData.append("audio", recordedBlob, "recording.wav");
-      formData.append("sessionName", sessionName);
+      formData.append("audio", recordedBlob);
+      formData.append("name", sessionName);
+      formData.append("length", length);
+      formData.append("timestamp", timestamp);
 
-      const response = await http("POST", formData);
+      const headers = {
+        "Content-Type": "multipart/form-data",
+      };
+      const res = await http<ResponseType>("POST", formData, headers);
 
-      if (!response) {
+      if (!res.success) {
         toast.error("Failed to upload recording");
         return;
       }
 
-      toast.success("Recording uploaded successfully");
+      toast.success(res?.message);
+
+      router.replace("/dashboard");
     } catch (error: any) {
       console.error("Error uploading recording:", error);
       toast.error(error?.message);

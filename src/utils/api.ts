@@ -5,12 +5,14 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 
 const http = async <T>(
   method: "GET" | "POST" | "PUT" | "DELETE",
-  data?: any
+  data?: any,
+  headers?: any
 ): Promise<T> => {
   try {
     const response = await axios({
       method,
       data,
+      headers,
     });
 
     return response.data;

@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Recordings } from "@/types";
+import { Recordings, ResponseType } from "@/types";
 import { Table } from "./Table";
 import { toast } from "react-hot-toast";
 import Loader from "@/components/Loader";
 import http from "@/utils/api";
 
 import io from "socket.io-client";
-const url = process.env.NEXT_PUBLIC_API_URL;
-const socket = io(url!);
+
+const socketUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const socket = io(socketUrl);
 
 const data: Recordings = [
   {
@@ -27,15 +28,16 @@ const data: Recordings = [
 ];
 
 export function RecordingList() {
-  const [recordings, setRecordings] = useState<Recordings | null>(data);
+  const [recordings, setRecordings] = useState<Recordings | null>();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchRecordings = async () => {
       setLoading(true);
       try {
-        const response = await http<Recordings>("GET");
-        setRecordings(response);
+        const response = await http<ResponseType>("GET");
+        if (!response.success) return;
+        setRecordings(response?.data);
       } catch (error: any) {
         toast.error(error.message || "An error occurred.");
       } finally {
@@ -46,9 +48,7 @@ export function RecordingList() {
     fetchRecordings();
 
     // Listen for 'statusUpdate' event from the server
-    socket.on("onStatusUpdate", (updatedRecordings: Recordings) => {
-      setRecordings(updatedRecordings);
-    });
+    socket.on("onStatusUpdate", handleStatusUpdate);
 
     // Clean up socket connection
     return () => {
@@ -56,18 +56,34 @@ export function RecordingList() {
     };
   }, []);
 
+  const handleStatusUpdate = (updatedRecording: Recordings[number]) => {
+    setRecordings((prevRecordings) =>
+      prevRecordings
+        ? prevRecordings.map((prevRecording) =>
+            prevRecording.id === updatedRecording.id
+              ? updatedRecording
+              : prevRecording
+          )
+        : null
+    );
+    toast.success(`${updatedRecording?.name}, done proccessing`);
+  };
+
   return (
     <>
       <div className="flex flex-col gap-5">
         <h3 className="font-medium">My Recordings</h3>
-        {recordings ? (
+
+        {recordings && recordings.length ? (
           <Table recordings={recordings} />
         ) : (
-          loading && (
-            <div className="flex items-center justify-center gap-2">
-              <Loader />
-            </div>
-          )
+          !loading && <div className="text-center my-4">No Recordings yet</div>
+        )}
+
+        {!recordings && loading && (
+          <div className="flex items-center justify-center gap-2">
+            <Loader />
+          </div>
         )}
       </div>
     </>
