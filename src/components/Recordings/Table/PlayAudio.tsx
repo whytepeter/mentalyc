@@ -41,7 +41,7 @@ export default function PlayAudio({ recording }: AudioPlayerProps) {
       >
         <div className="max-w-md bg-white rounded-2xl p-4 border flex flex-col gap-2">
           <div className="text-base sm:text-lg text-center flex items-center justify-between">
-            <span>{recording?.name}</span>{" "}
+            <span>{recording?.name}</span>
             <span onClick={closePlayer} className="cursor-pointer">
               <CloseIcon />
             </span>

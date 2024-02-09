@@ -12,14 +12,14 @@ export const useUpload = () => {
   const uploadRecording = async (
     recordedBlob: Blob,
     sessionName: string,
-    time: number
+    recordingLength: number
   ) => {
     if (!recordedBlob) return;
 
     try {
       setIsUploading(true);
 
-      const length = calculateLength(time) || "N/A";
+      const length = calculateLength(recordingLength) || "N/A";
       const timestamp = new Date().toLocaleString();
 
       const formData = new FormData();

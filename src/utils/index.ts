@@ -4,6 +4,7 @@ export const randomRange = (start: number, end: number) => {
 
 export const calculateLength = (time: number): string => {
   const timeStr = formatTime(time).split(":");
+  console.log(timeStr);
   const minutes = timeStr[1];
   const seconds = timeStr[2];
 

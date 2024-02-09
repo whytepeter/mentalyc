@@ -18,6 +18,7 @@ export default function RecordingSession({
 }: RecordingSessionType) {
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const [time, setTime] = useState<number>(0);
+  const [recordingLength, setrecordingLength] = useState<number>(0);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(
     null
   );
@@ -93,6 +94,7 @@ export default function RecordingSession({
     if (mediaRecorder) {
       mediaRecorder.stop();
       setIsRecording(false);
+      setrecordingLength(time);
       setTime(0);
     }
 
@@ -101,7 +103,7 @@ export default function RecordingSession({
 
   const handleUpload = (): void => {
     if (!recordedBlob) return;
-    uploadRecording(recordedBlob, sessionName, time);
+    uploadRecording(recordedBlob, sessionName, recordingLength);
   };
 
   return (
