@@ -12,9 +12,9 @@ export default function RecordingPanel({
   stopRecording,
 }: RecordingPanelType) {
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 w-full items-center sm:max-w-md">
       <div className="flex w-full   items-center justify-center gap-4">
-        <div className="animate__animated animate__pulse animate__infinite sm:w-28 sm:h-28 bg-gradient p-2 bg-slate-200 rounded-full">
+        <div className="animate__animated animate__pulse animate__infinite w-24 h-24 sm:w-28 sm:h-28 bg-gradient p-2 bg-slate-200 rounded-full">
           <div className="w-full h-full border border-white flex items-center justify-center rounded-full">
             <Microphone />
           </div>
