@@ -10,7 +10,7 @@ export type Recording = {
   timestamp: string;
   length: string;
   status: string;
-  mp3: string;
+  audioUrl: string;
 };
 
 export type Recordings = Recording[];
