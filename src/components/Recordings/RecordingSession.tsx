@@ -23,14 +23,16 @@ export default function RecordingSession({
   );
   const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
   const audioElementRef = useRef<HTMLAudioElement | null>(null);
+  const [recordingStatus, setRecordingStatus] = useState<string>("");
 
   const { uploadRecording, isUploading } = useUpload();
 
   useEffect(() => {
     if (isRecording) {
       startRecording();
-
       // Start timer to track recording duration
+      if (!recordingStatus) return;
+
       const id = setInterval(() => {
         setTime((prevTime) => prevTime + 1);
       }, 1000);
@@ -39,7 +41,7 @@ export default function RecordingSession({
         clearInterval(id);
       };
     }
-  }, [isRecording]);
+  }, [isRecording, recordingStatus]);
 
   const clearDurationInterval = (): void => {
     if (intervalId) {
@@ -70,14 +72,18 @@ export default function RecordingSession({
         if (audioElementRef.current) {
           audioElementRef.current.src = audioURL;
         }
+
+        setRecordingStatus("");
       };
 
       recorder.onerror = () => {
         setIsRecording(false);
+        setRecordingStatus("");
       };
 
       recorder.start();
       setIsRecording(true);
+      setRecordingStatus("Recording started");
     } catch (error) {
       console.error("Error starting recording:", error);
     }

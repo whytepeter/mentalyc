@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { calculateLength } from "@/utils";
+import { calculateLength, randomRange } from "@/utils";
 import { ResponseType } from "@/types";
 import { toast } from "react-hot-toast";
 import http from "@/utils/api";
@@ -33,6 +33,7 @@ export const useUpload = () => {
       };
 
       const res = await http<ResponseType>("POST", formData, headers);
+
       if (res.success) {
         toast.success(res?.message);
         router.replace("/dashboard");
