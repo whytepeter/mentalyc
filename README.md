@@ -1,6 +1,6 @@
 # Mentalyc
 
-[Hosted here](https://mentalyc.onrender.com)
+[Hosted here](https://imentalyc.vercel.app)
 
 ## How to run locally
 
