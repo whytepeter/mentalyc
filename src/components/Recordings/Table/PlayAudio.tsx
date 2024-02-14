@@ -11,6 +11,8 @@ export default function PlayAudio({ recording }: AudioPlayerProps) {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  const audioUrl = `${process.env.NEXT_PUBLIC_API_URL}/${recording.audioUrl}`;
+
   const togglePlay = (): void => {
     if (!audioRef.current) return;
     if (!isPlaying) {
@@ -46,12 +48,7 @@ export default function PlayAudio({ recording }: AudioPlayerProps) {
               <CloseIcon />
             </span>
           </div>
-          <audio
-            className=""
-            ref={audioRef}
-            src={recording.audioUrl}
-            controls
-          ></audio>
+          <audio className="" ref={audioRef} src={audioUrl} controls></audio>
         </div>
       </div>
     </>
