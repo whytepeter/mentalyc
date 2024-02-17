@@ -24,12 +24,12 @@ export default function RecordingPage() {
     if (!selectedFile) return;
 
     if (!sessionName) {
-      toast.error("Session is required");
+      toast.error("Recording name is required");
       return;
     }
 
     const audioBlob = await convertAudioToBlob(selectedFile);
-    const audioLength = (await getAudioDuration(audioBlob)) || 0;
+    const audioLength = (await getAudioDuration(audioBlob)) as number;
 
     uploadRecording(audioBlob, sessionName, audioLength);
   };
@@ -52,7 +52,7 @@ export default function RecordingPage() {
               <TextField
                 value={sessionName}
                 onInputChange={setSessionName}
-                placeholder="Enter session name"
+                placeholder="Enter recording name"
               />
               <Button onClick={handleUpload}>Upload Audio</Button>
             </div>
