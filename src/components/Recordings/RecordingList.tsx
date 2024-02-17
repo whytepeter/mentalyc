@@ -32,7 +32,7 @@ export function RecordingList() {
     socket.on("onStatusUpdate", handleStatusUpdate);
   }, [socket]);
 
-  const handleStatusUpdate = (updatedRecording: Recordings[number]) => {
+  const handleStatusUpdate = (updatedRecording: Recording) => {
     setRecordings((prevRecordings) => {
       const updatedRecordings = prevRecordings?.map((record) =>
         record.id === updatedRecording.id ? updatedRecording : record
@@ -47,7 +47,7 @@ export function RecordingList() {
       <div className="flex flex-col gap-5 pb-8">
         <h3 className="font-medium">
           Recordings -
-          <span className="text-primary-100">{recordings?.length || 0}</span>{" "}
+          <span className="text-primary-100">{recordings?.length || 0}</span>
         </h3>
 
         {recordings && recordings.length ? (

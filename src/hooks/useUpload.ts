@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { calculateLength, randomRange } from "@/utils";
+import { formatAudioLength } from "@/utils";
 import { ResponseType } from "@/types";
 import { toast } from "react-hot-toast";
 import http from "@/utils/api";
@@ -19,7 +19,7 @@ export const useUpload = () => {
     try {
       setIsUploading(true);
 
-      const length = calculateLength(recordingLength) || "N/A";
+      const length = formatAudioLength(recordingLength) || "N/A";
       const timestamp = new Date().toLocaleString();
 
       const formData = new FormData();

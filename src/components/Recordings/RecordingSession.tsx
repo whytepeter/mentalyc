@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useUpload } from "@/hooks/useUpload";
-import { BaseModal } from "@/components/BaseModal";
 import { Button } from "@/components/Button";
-import Loader from "@/components/Loader";
 import RecordingPanel from "@/components/Recordings/RecordingPanel";
+import UploadModal from "../UploadModal";
 
 type RecordingSessionType = {
   sessionName: string;
@@ -135,20 +134,7 @@ export default function RecordingSession({
         )}
       </div>
 
-      <BaseModal
-        showDismissButton={false}
-        size="small"
-        open={isUploading}
-        onClose={() => {}}
-      >
-        <div className="mb-4 text-center">
-          <h3 className="font-bold text-xl mb-1">Uploading recording</h3>
-        </div>
-
-        <div className="flex items-center justify-center gap-2">
-          <Loader />
-        </div>
-      </BaseModal>
+      <UploadModal isUploading={isUploading} />
     </>
   );
 }

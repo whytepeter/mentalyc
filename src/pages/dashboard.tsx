@@ -4,15 +4,16 @@ import Head from "next/head";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import DashboardPage from "@/components/Page/Dashboard";
 import RecordingPage from "@/components/Page/Recording";
+import UploadPage from "@/components/Page/Upload";
 
 export default function Dashboard() {
   const router = useRouter();
   const [isClient, setIsClient] = useState<boolean>(false);
-  const [isRecordingScreen, setIsRecordingScreen] = useState<boolean>(false);
+  const [activePage, setActivePage] = useState<string | null>(null);
 
   useEffect(() => {
     setIsClient(true);
-    setIsRecordingScreen(!!router.query?.recording);
+    setActivePage(router.query?.page as string | null);
   }, [router.query]);
 
   return (
@@ -22,7 +23,9 @@ export default function Dashboard() {
           <Head>
             <title>Mentalyc Dashboard</title>
           </Head>
-          {isRecordingScreen ? <RecordingPage /> : <DashboardPage />}
+          {!activePage && <DashboardPage />}
+          {activePage == "record" && <RecordingPage />}
+          {activePage == "upload" && <UploadPage />}
         </DashboardLayout>
       )}
     </>

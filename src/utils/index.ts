@@ -2,7 +2,7 @@ export const randomRange = (start: number, end: number) => {
   return Math.floor(Math.random() * (end - start)) + start;
 };
 
-export const calculateLength = (time: number): string => {
+export const formatAudioLength = (time: number): string => {
   const timeStr = formatTime(time).split(":");
   const minutes = timeStr[1];
   const seconds = timeStr[2];
@@ -22,3 +22,41 @@ export const formatTime = (time: number): string => {
 
   return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 };
+
+export const convertAudioToBlob = async (file: File): Promise<Blob> => {
+  const reader = new FileReader();
+  reader.readAsArrayBuffer(file);
+
+  return new Promise((resolve, reject) => {
+    reader.onload = () => {
+      const arrayBuffer = reader.result as ArrayBuffer;
+      const audioBlob = new Blob([arrayBuffer], { type: file.type });
+      resolve(audioBlob);
+    };
+
+    reader.onerror = reject;
+  });
+};
+
+export async function getAudioDuration(
+  audioBlob: Blob
+): Promise<number | undefined> {
+  const url = URL.createObjectURL(audioBlob);
+
+  return new Promise<number | undefined>((resolve, reject) => {
+    const audio = document.createElement("audio");
+    audio.muted = true;
+    const source = document.createElement("source");
+    source.src = url;
+    audio.preload = "metadata";
+    audio.appendChild(source);
+
+    audio.onloadedmetadata = () => {
+      resolve(audio.duration);
+    };
+
+    audio.onerror = () => {
+      reject(new Error("Failed to load audio metadata"));
+    };
+  });
+}
