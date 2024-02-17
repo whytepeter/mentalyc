@@ -23,7 +23,7 @@ export default function DashboardPage() {
                 }}
                 className="md:w-fit"
               >
-                Upload Audio
+                Upload Recording
               </Button>
               <Button
                 onClick={() => {
