@@ -4,7 +4,6 @@ import Head from "next/head";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import DashboardPage from "@/components/Page/Dashboard";
 import RecordingPage from "@/components/Page/Recording";
-import UploadPage from "@/components/Page/Upload";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -25,7 +24,6 @@ export default function Dashboard() {
           </Head>
           {!activePage && <DashboardPage />}
           {activePage == "record" && <RecordingPage />}
-          {activePage == "upload" && <UploadPage />}
         </DashboardLayout>
       )}
     </>

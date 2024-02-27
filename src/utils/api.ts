@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosProgressEvent } from "axios";
 
 axios.defaults.baseURL = `${process.env.NEXT_PUBLIC_API_URL}/api/recordings`;
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -6,13 +6,15 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 const http = async <T>(
   method: "GET" | "POST" | "PUT" | "DELETE",
   data?: any,
-  headers?: any
+  headers?: any,
+  onUploadProgress?: (progressEvent: AxiosProgressEvent) => void
 ): Promise<T> => {
   try {
     const response = await axios({
       method,
       data,
       headers,
+      onUploadProgress,
     });
 
     return response.data;

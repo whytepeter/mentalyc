@@ -25,7 +25,7 @@ export default function RecordingSession({
   const audioElementRef = useRef<HTMLAudioElement | null>(null);
   const [recordingStatus, setRecordingStatus] = useState<string>("");
 
-  const { uploadRecording, isUploading } = useUpload();
+  const { uploadRecording, isUploading, progress } = useUpload();
 
   useEffect(() => {
     if (isRecording) {
@@ -134,7 +134,7 @@ export default function RecordingSession({
         )}
       </div>
 
-      <UploadModal isUploading={isUploading} />
+      <UploadModal isUploading={isUploading} progress={progress} />
     </>
   );
 }

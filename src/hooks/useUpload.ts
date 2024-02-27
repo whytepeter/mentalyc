@@ -3,11 +3,13 @@ import { useRouter } from "next/router";
 import { formatAudioLength } from "@/utils";
 import { ResponseType } from "@/types";
 import { toast } from "react-hot-toast";
+import { AxiosProgressEvent } from "axios";
 import http from "@/utils/api";
 
 export const useUpload = () => {
   const router = useRouter();
   const [isUploading, setIsUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const uploadRecording = async (
     recordedBlob: Blob,
@@ -32,7 +34,18 @@ export const useUpload = () => {
         "Content-Type": "multipart/form-data",
       };
 
-      const res = await http<ResponseType>("POST", formData, headers);
+      const onUploadProgress = (progressEvent: AxiosProgressEvent) => {
+        const total = progressEvent.total || 0;
+        const progressData = Math.round((progressEvent.loaded / total) * 100);
+        setProgress(progressData);
+      };
+
+      const res = await http<ResponseType>(
+        "POST",
+        formData,
+        headers,
+        onUploadProgress
+      );
 
       if (res.success) {
         toast.success(res?.message);
@@ -48,5 +61,5 @@ export const useUpload = () => {
     }
   };
 
-  return { uploadRecording, isUploading };
+  return { uploadRecording, isUploading, progress };
 };
