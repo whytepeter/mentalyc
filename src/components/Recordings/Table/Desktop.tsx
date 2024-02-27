@@ -1,6 +1,7 @@
 import { Recordings } from "@/types";
 import React from "react";
 import PlayAudio from "./PlayAudio";
+import DisplayStatus from "@/components/DisplayStatus";
 
 type TableProps = {
   recordings: Recordings;
@@ -32,15 +33,7 @@ export default function Desktop({ recordings }: TableProps) {
               <div className="line-clamp-1">{recording.timestamp}</div>
               <div className="">{recording.length}</div>
               <div className="">
-                <span
-                  className={`${
-                    recording?.status === "PROCESSING"
-                      ? "bg-slate-200 text-grey-100"
-                      : "bg-gradient text-white"
-                  } rounded-full text-xs px-4 py-2 `}
-                >
-                  {recording.status}
-                </span>
+                <DisplayStatus recording={recording} />
               </div>
               <div className="">
                 <PlayAudio recording={recording} />

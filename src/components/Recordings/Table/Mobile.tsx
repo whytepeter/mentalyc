@@ -1,5 +1,6 @@
 import { Recordings } from "@/types";
 import PlayAudio from "./PlayAudio";
+import DisplayStatus from "@/components/DisplayStatus";
 
 type TableProps = {
   recordings: Recordings;
@@ -32,15 +33,7 @@ export default function Mobile({ recordings }: TableProps) {
             </span>
           </div>
           <div className="flex items-end gap-4 justify-between text-sm">
-            <span
-              className={`${
-                recording?.status === "PROCESSING"
-                  ? "bg-slate-200 text-grey-100"
-                  : "bg-gradient text-white"
-              } rounded-full text-xs px-4 py-2 `}
-            >
-              {recording.status}
-            </span>
+            <DisplayStatus recording={recording} />
             <span className="text-right text-dark-400 font-medium">
               <PlayAudio recording={recording} />
             </span>

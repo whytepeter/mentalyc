@@ -1,5 +1,6 @@
 import React from "react";
 import { BaseModal } from "./BaseModal";
+import Progress from "./Progress";
 
 interface UploadModalProps {
   isUploading: boolean;
@@ -22,12 +23,7 @@ export default function UploadModal({
       </div>
 
       <div className="flex items-center justify-center gap-2">
-        <div className="bg-gray-200 w-full h-6 rounded-full overflow-hidden relative">
-          <div
-            style={{ width: `${progress}%` }}
-            className="bg-gradient  h-full transition-all duration-200"
-          ></div>
-        </div>
+        <Progress progress={progress} />
       </div>
     </BaseModal>
   );
