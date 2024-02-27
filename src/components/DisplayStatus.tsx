@@ -28,7 +28,7 @@ export default function DisplayStatus({ recording }: StatusProps) {
     }
   };
   return (
-    <div>
+    <div className="w-10/12 sm:w-full">
       {recording?.status === "DONE" ? (
         <span className="bg-gradient text-white rounded-full text-xs px-4 py-2">
           {recording.status}
